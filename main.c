@@ -2,13 +2,17 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include  "utility.c"
-#include  "pre_process.c"
+#include  "utility.h"
+#include  "pre_process.h"
+#include  "first_pass.h"
+#include "data_structures.h"
+
+
 
 
 int main(int argc, char *argv[]){
 
-    // char *file_names[argc - 1];
+    
     FILE *fp;
     int arg_count = 1;
    
@@ -22,21 +26,26 @@ int main(int argc, char *argv[]){
         fp = fopen(file_name, "r");
         char c = 0;
         if(fp != NULL){
-            pre_proccesor(fp);
+            pre_processor(fp, file_name);
+
+
+        fclose(fp);
         }
-        // while(1){
-        //     c = fgetc(fp);
-        //     if (c == EOF)
-        //     {
-        //         break;
-        //     }
-        //     printf("%c",c);
-            
-            
-        // }
-        // fclose(fp);
+
+        
+        char *new_file_name;
+        new_file_name = create_final_name(file_name);
+        fp = fopen(new_file_name, "r");
+        if(fp != NULL){
+            first_pass(fp, file_name);
+
+
+        fclose(fp);
+        }
+        
+        
     }
     
-
+    return 0;
 
 }

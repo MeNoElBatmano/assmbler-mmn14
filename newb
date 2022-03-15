@@ -1,0 +1,93 @@
+void first_pass(FILE *fp, char *file_name){
+    label_table *table = malloc(sizeof(table));
+    table->count = 0;
+    table->head = NULL;
+    label_node *node;
+    int is_data = 0;
+    int is_directive = 0;
+    
+
+    
+    int is_label = 0;
+
+    char *current_line = malloc(81 * sizeof(char));
+
+     while(!feof(fp)) {
+        fgets(current_line,81,fp);
+        if (strstr(current_line, ":") != NULL)
+        {   
+            is_label = 1;
+            is_data = 1;
+            if(strstr(current_line, ".data") != NULL || strstr(current_line, ".string") != NULL){
+                char *copy_line = malloc(81 * sizeof(char));
+                strcpy(copy_line , current_line);
+                handle_label(copy_line, node,table, is_data,IC);
+                if (strstr(current_line, ".data") != NULL)
+                {
+                    data_flag = 1;
+                    line_to_tokens(copy_line, strstr(current_line, ".data") + 5);
+                    data_flag = 0;
+                    continue;
+                }
+                else if(strstr(current_line, ".string") != NULL)\
+                {
+                    string_flag = 1;
+                    line_to_tokens(copy_line, strstr(current_line, ".string") + 7);
+                    string_flag = 0;
+                    continue;
+                }
+                free(copy_line);
+                
+            }
+            
+            
+        }
+        else if(strstr(current_line, ".entry") != NULL)
+        {
+            continue;
+        }
+        else if(strstr(current_line, ".extern") != NULL)
+        {
+            extern_flag = 1;
+            char *copy_line = malloc(81 * sizeof(char));
+            strcpy(copy_line , current_line);
+            handle_label(copy_line, node,table, is_data,IC);
+            extern_flag = 0;
+            continue;
+        }
+        /*DIRECTIVE*/
+        else if(strlen(current_line) > 0)
+        {
+            directive_flag = 1;
+            char *copy_line = malloc(81 * sizeof(char));
+            strcpy(copy_line , current_line);
+            line_to_tokens(copy_line, current_line);
+            directive_flag = 0;
+            L = 0;
+            continue;
+        }
+
+        
+    }
+    label_node *tmp;
+    tmp = table->head;
+    while(tmp != NULL){
+        printf("%s\n", tmp->name);
+        printf("%d\n", tmp->base);
+        printf("%d\n", tmp->offset);
+        printf("%s\n", tmp->attr);
+        tmp = tmp->next;
+    }
+    int icc = 100;
+    while(icc != 140){
+        printf("%s\n", code[icc]);
+        icc++;
+    }
+    icc = 0;
+    while(icc != 50){
+        printf("%s\n",data[icc]);
+        icc++;
+    }
+
+}
+

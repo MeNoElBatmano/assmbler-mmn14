@@ -4,6 +4,8 @@
 #include <stdlib.h>
 
 
+
+
 /* Creates new string with .as extension from argv file name*/ 
 char *create_file_name(char *name){
     char *mod_file_name = malloc(strlen(name) + 4);
@@ -11,4 +13,13 @@ char *create_file_name(char *name){
     strcat(mod_file_name, ".txt");
 
     return mod_file_name;
-}
+};
+
+
+char *create_final_name(char *name){
+    char *mod_file_name = malloc(strlen(name) + 10);
+    strcat(mod_file_name, "final_");
+    strcat(mod_file_name, name);
+
+    return mod_file_name;
+};
